@@ -1,0 +1,12 @@
+Result
+Epoch 1/10, Train Loss: 0.8551, Valid Loss: 3.1051, Valid Accuracy: 50.00%
+Epoch 2/10, Train Loss: 0.5969, Valid Loss: 11.6112, Valid Accuracy: 25.35%
+Epoch 3/10, Train Loss: 0.5945, Valid Loss: 2.2990, Valid Accuracy: 57.04%
+Epoch 4/10, Train Loss: 0.5287, Valid Loss: 1.2799, Valid Accuracy: 46.48%
+Epoch 5/10, Train Loss: 0.4982, Valid Loss: 1.2585, Valid Accuracy: 62.68%
+Epoch 6/10, Train Loss: 0.4180, Valid Loss: 1.4439, Valid Accuracy: 66.20%
+Epoch 7/10, Train Loss: 0.3135, Valid Loss: 1.0894, Valid Accuracy: 69.72%
+Epoch 8/10, Train Loss: 0.3314, Valid Loss: 0.7903, Valid Accuracy: 75.35%
+Epoch 9/10, Train Loss: 0.2289, Valid Loss: 1.1086, Valid Accuracy: 73.94%
+Epoch 10/10, Train Loss: 0.3102, Valid Loss: 1.8094, Valid Accuracy: 61.27%
+Test Accuracy: 52.42%
