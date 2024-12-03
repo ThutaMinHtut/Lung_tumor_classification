@@ -10,3 +10,54 @@ Epoch 8/10, Train Loss: 0.3314, Valid Loss: 0.7903, Valid Accuracy: 75.35%
 Epoch 9/10, Train Loss: 0.2289, Valid Loss: 1.1086, Valid Accuracy: 73.94%
 Epoch 10/10, Train Loss: 0.3102, Valid Loss: 1.8094, Valid Accuracy: 61.27%
 Test Accuracy: 52.42%
+
+
+second run with weighted loss
+Epoch 1/10, Train Loss: 0.9000, Valid Loss: 11.9421, Valid Accuracy: 33.10%
+Epoch 2/10, Train Loss: 0.7157, Valid Loss: 0.9312, Valid Accuracy: 61.27%
+Epoch 3/10, Train Loss: 0.6141, Valid Loss: 1.0417, Valid Accuracy: 54.23%
+Epoch 4/10, Train Loss: 0.5485, Valid Loss: 2.1248, Valid Accuracy: 49.30%
+Epoch 5/10, Train Loss: 0.5692, Valid Loss: 1.2136, Valid Accuracy: 49.30%
+Epoch 6/10, Train Loss: 0.4684, Valid Loss: 2.5186, Valid Accuracy: 56.34%
+Epoch 7/10, Train Loss: 0.4631, Valid Loss: 0.8723, Valid Accuracy: 66.90%
+Epoch 8/10, Train Loss: 0.3881, Valid Loss: 2.2930, Valid Accuracy: 52.11%
+Epoch 9/10, Train Loss: 0.3858, Valid Loss: 4.4034, Valid Accuracy: 45.77%
+Epoch 10/10, Train Loss: 0.4048, Valid Loss: 1.3573, Valid Accuracy: 54.93%
+Test Accuracy: 37.26%
+
+
+
+weighted loss with additional help
+scaled_weights = class_weights * 0.5  # Scale down weights to avoid overcorrection
+optimizer = optim.Adam(model.parameters(), lr=0.0005)  # Reduce learning rate
+Epoch 1/10, Train Loss: 0.7559, Valid Loss: 0.9427, Valid Accuracy: 63.38%
+Epoch 2/10, Train Loss: 0.2593, Valid Loss: 0.6850, Valid Accuracy: 74.65%
+Epoch 3/10, Train Loss: 0.1683, Valid Loss: 0.7085, Valid Accuracy: 84.51%
+Epoch 4/10, Train Loss: 0.1294, Valid Loss: 0.8462, Valid Accuracy: 85.21%
+Epoch 5/10, Train Loss: 0.0696, Valid Loss: 0.7920, Valid Accuracy: 76.06%
+Epoch 6/10, Train Loss: 0.0402, Valid Loss: 1.0954, Valid Accuracy: 75.35%
+Epoch 7/10, Train Loss: 0.0550, Valid Loss: 0.9046, Valid Accuracy: 79.58%
+Epoch 8/10, Train Loss: 0.0689, Valid Loss: 0.8993, Valid Accuracy: 76.76%
+Epoch 9/10, Train Loss: 0.0662, Valid Loss: 0.5511, Valid Accuracy: 85.92%
+Epoch 10/10, Train Loss: 0.0280, Valid Loss: 1.2022, Valid Accuracy: 80.28%
+Test Accuracy: 74.74%
+
+
+Added early stopping and learning rate decay
+Epoch 1/10, Train Loss: 0.6843, Valid Loss: 2.1726, Valid Accuracy: 56.34%
+Epoch 2/10, Train Loss: 0.2990, Valid Loss: 0.8331, Valid Accuracy: 80.28%
+Epoch 3/10, Train Loss: 0.1700, Valid Loss: 1.1251, Valid Accuracy: 74.65%
+EarlyStopping: No improvement in validation loss for 1 epochs.
+Epoch 4/10, Train Loss: 0.0658, Valid Loss: 0.5800, Valid Accuracy: 82.39%
+Epoch 5/10, Train Loss: 0.0300, Valid Loss: 0.5345, Valid Accuracy: 85.92%
+Epoch 6/10, Train Loss: 0.0220, Valid Loss: 0.4956, Valid Accuracy: 86.62%
+Epoch 7/10, Train Loss: 0.0180, Valid Loss: 0.4986, Valid Accuracy: 86.62%
+EarlyStopping: No improvement in validation loss for 1 epochs.
+Epoch 8/10, Train Loss: 0.0153, Valid Loss: 0.5250, Valid Accuracy: 85.92%
+EarlyStopping: No improvement in validation loss for 2 epochs.
+Epoch 9/10, Train Loss: 0.0088, Valid Loss: 0.5065, Valid Accuracy: 87.32%
+EarlyStopping: No improvement in validation loss for 3 epochs.
+Early stopping triggered!
+Test Accuracy: 85.05%
+
+

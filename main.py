@@ -4,6 +4,22 @@ from torch.utils.data import DataLoader
 import torch.nn as nn
 import torch.optim as optim
 
+from torchvision.models import ResNet50_Weights
+
+
+#for learning rate decay
+from torch.optim.lr_scheduler import StepLR
+
+# Calculate class weights
+from sklearn.utils.class_weight import compute_class_weight
+import numpy as np
+
+
+
+# Move model to GPU if available
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
 
 # Data transformations
 transform = transforms.Compose([
@@ -29,8 +45,27 @@ test_loader = DataLoader(test_data, batch_size=32, shuffle=False)
 
 ####################################################################################
 
+
+# Get class counts and compute weights
+class_counts = [len([f for f in train_data.samples if f[1] == idx]) for idx in range(len(train_data.classes))]
+class_weights = compute_class_weight(class_weight='balanced', classes=np.array(range(len(train_data.classes))), y=[s[1] for s in train_data.samples])
+class_weights = torch.tensor(class_weights, dtype=torch.float).to(device)
+
+scaled_weights = class_weights * 0.5  # Scale down weights to avoid overcorrection
+
+# Modify the loss function to include class weights
+#criterion = nn.CrossEntropyLoss(weight=class_weights)
+
+criterion = nn.CrossEntropyLoss(weight=scaled_weights)
+
+####################################################################################
+
+
+
 # Load Pretrained ResNet-50
-model = models.resnet50(pretrained=True)
+#model = models.resnet50(pretrained=True)
+
+model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
 
 # Modify the final layer for multi-class classification
 num_classes = len(train_data.classes)  # Automatically detects the number of classes
@@ -41,18 +76,46 @@ model.fc = nn.Sequential(
     nn.Linear(512, num_classes)
 )
 
-# Move model to GPU if available
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 model = model.to(device)
 
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+#optimizer = optim.Adam(model.parameters(), lr=0.001)
 
+optimizer = optim.Adam(model.parameters(), lr=0.0005)  # Reduce learning rate
+
+####################################################################################
+class EarlyStopping:
+    def __init__(self, patience=5, delta=0, verbose=True):
+        self.patience = patience
+        self.delta = delta
+        self.verbose = verbose
+        self.counter = 0
+        self.best_loss = None
+        self.early_stop = False
+
+    def __call__(self, val_loss):
+        if self.best_loss is None:
+            self.best_loss = val_loss
+        elif val_loss > self.best_loss - self.delta:
+            self.counter += 1
+            if self.verbose:
+                print(f"EarlyStopping: No improvement in validation loss for {self.counter} epochs.")
+            if self.counter >= self.patience:
+                self.early_stop = True
+        else:
+            self.best_loss = val_loss
+            self.counter = 0
 
 ####################################################################################
 
+
+
+scheduler = StepLR(optimizer, step_size=3, gamma=0.1) #every 3 epoch
+
 def train_model(model, train_loader, valid_loader, criterion, optimizer, epochs):
+    early_stopping = EarlyStopping(patience=3) 
     for epoch in range(epochs):
         model.train()
         running_loss = 0.0
@@ -84,10 +147,19 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer, epochs)
                 correct += (preds == labels).sum().item()
                 total += labels.size(0)
 
+
+        scheduler.step()
+
         print(f"Epoch {epoch+1}/{epochs}, "
               f"Train Loss: {running_loss/len(train_loader):.4f}, "
               f"Valid Loss: {valid_loss/len(valid_loader):.4f}, "
               f"Valid Accuracy: {100 * correct/total:.2f}%")
+        
+        # Check early stopping
+        early_stopping(valid_loss / len(valid_loader))
+        if early_stopping.early_stop:
+            print("Early stopping triggered!")
+            break
 
 # Train the model
 train_model(model, train_loader, valid_loader, criterion, optimizer, epochs=10)
@@ -106,5 +178,3 @@ with torch.no_grad():
         total += labels.size(0)
 
 print(f"Test Accuracy: {100 * correct / total:.2f}%")
-
-
