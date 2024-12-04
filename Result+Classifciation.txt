@@ -1,0 +1,120 @@
+Result
+Epoch 1/10, Train Loss: 0.8551, Valid Loss: 3.1051, Valid Accuracy: 50.00%
+Epoch 2/10, Train Loss: 0.5969, Valid Loss: 11.6112, Valid Accuracy: 25.35%
+Epoch 3/10, Train Loss: 0.5945, Valid Loss: 2.2990, Valid Accuracy: 57.04%
+Epoch 4/10, Train Loss: 0.5287, Valid Loss: 1.2799, Valid Accuracy: 46.48%
+Epoch 5/10, Train Loss: 0.4982, Valid Loss: 1.2585, Valid Accuracy: 62.68%
+Epoch 6/10, Train Loss: 0.4180, Valid Loss: 1.4439, Valid Accuracy: 66.20%
+Epoch 7/10, Train Loss: 0.3135, Valid Loss: 1.0894, Valid Accuracy: 69.72%
+Epoch 8/10, Train Loss: 0.3314, Valid Loss: 0.7903, Valid Accuracy: 75.35%
+Epoch 9/10, Train Loss: 0.2289, Valid Loss: 1.1086, Valid Accuracy: 73.94%
+Epoch 10/10, Train Loss: 0.3102, Valid Loss: 1.8094, Valid Accuracy: 61.27%
+Test Accuracy: 52.42%
+
+
+second run with weighted loss
+Epoch 1/10, Train Loss: 0.9000, Valid Loss: 11.9421, Valid Accuracy: 33.10%
+Epoch 2/10, Train Loss: 0.7157, Valid Loss: 0.9312, Valid Accuracy: 61.27%
+Epoch 3/10, Train Loss: 0.6141, Valid Loss: 1.0417, Valid Accuracy: 54.23%
+Epoch 4/10, Train Loss: 0.5485, Valid Loss: 2.1248, Valid Accuracy: 49.30%
+Epoch 5/10, Train Loss: 0.5692, Valid Loss: 1.2136, Valid Accuracy: 49.30%
+Epoch 6/10, Train Loss: 0.4684, Valid Loss: 2.5186, Valid Accuracy: 56.34%
+Epoch 7/10, Train Loss: 0.4631, Valid Loss: 0.8723, Valid Accuracy: 66.90%
+Epoch 8/10, Train Loss: 0.3881, Valid Loss: 2.2930, Valid Accuracy: 52.11%
+Epoch 9/10, Train Loss: 0.3858, Valid Loss: 4.4034, Valid Accuracy: 45.77%
+Epoch 10/10, Train Loss: 0.4048, Valid Loss: 1.3573, Valid Accuracy: 54.93%
+Test Accuracy: 37.26%
+
+
+
+weighted loss with additional help
+scaled_weights = class_weights * 0.5  # Scale down weights to avoid overcorrection
+optimizer = optim.Adam(model.parameters(), lr=0.0005)  # Reduce learning rate
+Epoch 1/10, Train Loss: 0.7559, Valid Loss: 0.9427, Valid Accuracy: 63.38%
+Epoch 2/10, Train Loss: 0.2593, Valid Loss: 0.6850, Valid Accuracy: 74.65%
+Epoch 3/10, Train Loss: 0.1683, Valid Loss: 0.7085, Valid Accuracy: 84.51%
+Epoch 4/10, Train Loss: 0.1294, Valid Loss: 0.8462, Valid Accuracy: 85.21%
+Epoch 5/10, Train Loss: 0.0696, Valid Loss: 0.7920, Valid Accuracy: 76.06%
+Epoch 6/10, Train Loss: 0.0402, Valid Loss: 1.0954, Valid Accuracy: 75.35%
+Epoch 7/10, Train Loss: 0.0550, Valid Loss: 0.9046, Valid Accuracy: 79.58%
+Epoch 8/10, Train Loss: 0.0689, Valid Loss: 0.8993, Valid Accuracy: 76.76%
+Epoch 9/10, Train Loss: 0.0662, Valid Loss: 0.5511, Valid Accuracy: 85.92%
+Epoch 10/10, Train Loss: 0.0280, Valid Loss: 1.2022, Valid Accuracy: 80.28%
+Test Accuracy: 74.74%
+
+
+Added early stopping and learning rate decay
+Epoch 1/10, Train Loss: 0.6843, Valid Loss: 2.1726, Valid Accuracy: 56.34%
+Epoch 2/10, Train Loss: 0.2990, Valid Loss: 0.8331, Valid Accuracy: 80.28%
+Epoch 3/10, Train Loss: 0.1700, Valid Loss: 1.1251, Valid Accuracy: 74.65%
+EarlyStopping: No improvement in validation loss for 1 epochs.
+Epoch 4/10, Train Loss: 0.0658, Valid Loss: 0.5800, Valid Accuracy: 82.39%
+Epoch 5/10, Train Loss: 0.0300, Valid Loss: 0.5345, Valid Accuracy: 85.92%
+Epoch 6/10, Train Loss: 0.0220, Valid Loss: 0.4956, Valid Accuracy: 86.62%
+Epoch 7/10, Train Loss: 0.0180, Valid Loss: 0.4986, Valid Accuracy: 86.62%
+EarlyStopping: No improvement in validation loss for 1 epochs.
+Epoch 8/10, Train Loss: 0.0153, Valid Loss: 0.5250, Valid Accuracy: 85.92%
+EarlyStopping: No improvement in validation loss for 2 epochs.
+Epoch 9/10, Train Loss: 0.0088, Valid Loss: 0.5065, Valid Accuracy: 87.32%
+EarlyStopping: No improvement in validation loss for 3 epochs.
+Early stopping triggered!
+Test Accuracy: 85.05%
+
+
+https://github.com/uol-feps-soc-comp3931-project-2425/individual-project-ThutaMinHtut
+
+
+
+can change dropout 
+can try to use focal loss instead of weighted cross entropy loss
+can change scaled_weights
+can change learning rate 
+can add weight decay
+can change learning rate decay
+can change step size for early stopping
+######################################################################################################################
+IMBALANCED CLASS HANDLING OPTIONS
+
+can apply data augmentation methods like flipping ,rotation or cropping or color jittering for smaller classes (cannot data augment test and valid folder)
+resample/oversample or add more weight to smaller class
+synthetic data generation for smaller class
+can try to experiment with fine-tuning deeper layers of ResNet-50 to improve class-specific learning.
+Stratified Splits: Split the dataset so each class is proportionately represented in training, validation, and test sets.
+Cross-Validation: Use k-fold cross-validation to ensure every sample, including the rare benign ones, contributes to both training and testing across folds.
+Stratified k-Fold Cross-Validation :Ensures that each fold maintains the same proportion of classes as the original dataset (important for imbalanced datasets).
+Leave-One-Out Cross-Validation (LOOCV)
+
+
+######################################################################################################################
+train: Used to train the model.
+valid: Used during training to monitor generalization and prevent overfitting.
+test: Used after training to evaluate the model's overall performance on unseen data.
+ oversampling
+Epoch 1/10, Train Loss: 0.6872, Valid Loss: 0.6646, Valid Accuracy: 75.35%
+Epoch 2/10, Train Loss: 0.2586, Valid Loss: 0.9290, Valid Accuracy: 75.35%
+EarlyStopping: No improvement in validation loss for 1 epochs.
+Epoch 3/10, Train Loss: 0.1254, Valid Loss: 0.6558, Valid Accuracy: 85.92%
+Epoch 4/10, Train Loss: 0.0590, Valid Loss: 0.5132, Valid Accuracy: 85.92%
+Epoch 5/10, Train Loss: 0.0193, Valid Loss: 0.5683, Valid Accuracy: 86.62%
+EarlyStopping: No improvement in validation loss for 1 epochs.
+Epoch 6/10, Train Loss: 0.0118, Valid Loss: 0.6007, Valid Accuracy: 87.32%
+EarlyStopping: No improvement in validation loss for 2 epochs.
+Epoch 7/10, Train Loss: 0.0141, Valid Loss: 0.5938, Valid Accuracy: 85.21%
+EarlyStopping: No improvement in validation loss for 3 epochs.
+Early stopping triggered!
+Test Accuracy: 89.05%
+
+Classification Report:
+
+                                                  precision    recall  f1-score   support
+
+                                    Bengin cases       0.00      0.00      0.00        11
+                                 Malignant cases       0.94      1.00      0.97        80
+      adenocarcinoma_left.lower.lobe_T2_N0_M0_Ib       0.94      0.85      0.89       120
+   large.cell.carcinoma_left.hilum_T2_N2_M0_IIIa       0.75      0.92      0.82        51
+                                          normal       0.90      0.91      0.90       123
+squamous.cell.carcinoma_left.hilum_T1_N2_M0_IIIa       0.92      0.91      0.92        90
+
+                                        accuracy                           0.89       475
+                                       macro avg       0.74      0.77      0.75       475
+
