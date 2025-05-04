@@ -1,4 +1,4 @@
-# AI-Based Detection of Lung Tumors in CT Scans with Synthetic Data Augmentation
+# AI-Based Classification of Lung Tumors in CT Scans with Synthetic Data Augmentation
 
 ## Project Description
 This project explores synthetic data augmentation techniques to improve lung tumor classification from CT scans using deep learning.  
