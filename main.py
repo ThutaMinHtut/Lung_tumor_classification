@@ -3,6 +3,7 @@ from torchvision import datasets, transforms, models
 from torch.utils.data import DataLoader
 import torch.nn as nn
 import torch.optim as optim
+import torch.nn.functional as F
 
 from torchvision.models import ResNet50_Weights
 
@@ -16,7 +17,7 @@ import numpy as np
 
 
 #classification report
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report , confusion_matrix
 
 #oversample
 from torch.utils.data import WeightedRandomSampler
@@ -34,15 +35,14 @@ transform = transforms.Compose([
 ])
 
 # Directories
-train_dir = "Lung_tumor_detection/ResizedDataset/train"
-valid_dir = "Lung_tumor_detection/ResizedDataset/valid"
-test_dir = "Lung_tumor_detection/ResizedDataset/test"
+train_dir = "ResizedWITHGAN/train"
+valid_dir = "ResizedWITHGAN/valid"
+test_dir = "ResizedWITHGAN/test"
 
 # Datasets
 train_data = datasets.ImageFolder(train_dir, transform=transform)
 valid_data = datasets.ImageFolder(valid_dir, transform=transform)
 test_data = datasets.ImageFolder(test_dir, transform=transform)
-
 
 ####################################################################################
 
@@ -78,6 +78,7 @@ model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
 num_classes = len(train_data.classes)  # Automatically detects the number of classes
 model.fc = nn.Sequential(
     nn.Linear(model.fc.in_features, 512),
+    #nn.BatchNorm1d(512),
     nn.ReLU(),
     nn.Dropout(0.4),
     nn.Linear(512, num_classes)
@@ -88,8 +89,11 @@ model = model.to(device)
 
 # Loss and optimizer
 criterion = nn.CrossEntropyLoss()
+#criterion = FocalLoss(alpha=0.25, gamma=2.0).to(device)
 #optimizer = optim.Adam(model.parameters(), lr=0.001)
 optimizer = optim.Adam(model.parameters(), lr=0.0005)  # Reduce learning rate
+#optimizer = optim.AdamW(model.parameters(), lr=0.0005, weight_decay=1e-4)
+
 
 ####################################################################################
 class EarlyStopping:
@@ -116,9 +120,11 @@ class EarlyStopping:
 
 ####################################################################################
 scheduler = StepLR(optimizer, step_size=3, gamma=0.1) # decay LR every 3 epoch
+#scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=5, T_mult=2)
+
 
 def train_model(model, train_loader, valid_loader, criterion, optimizer,scheduler, epochs,save_path):
-    early_stopping = EarlyStopping(patience=3)
+    early_stopping = EarlyStopping(patience=50)
     best_valid_loss = float('inf')
     for epoch in range(epochs):
         model.train()
@@ -173,12 +179,12 @@ def train_model(model, train_loader, valid_loader, criterion, optimizer,schedule
             print("Early stopping triggered!")
             break
 
-save_path = "best_model.pth"
+save_path = "best_model_WITHGAN_2.pth"
 # Train the model
-train_model(model, train_loader, valid_loader, criterion, optimizer,scheduler, epochs=10,save_path=save_path)
+train_model(model, train_loader, valid_loader, criterion, optimizer,scheduler, epochs=150,save_path=save_path)
 
 #################################################################################################
-model.load_state_dict(torch.load("best_model.pth", weights_only=True))
+model.load_state_dict(torch.load("best_model_WITHGAN_2.pth", weights_only=True))
 model.eval()
 correct = 0
 total = 0
@@ -207,3 +213,17 @@ report = classification_report(true_labels, predicted_labels, target_names=class
 print("\nClassification Report:\n")
 print(report)
 
+cm = confusion_matrix(true_labels, predicted_labels)
+print("Confusion Matrix:")
+print(cm)
+
+# Optionally, display the confusion matrix as a heatmap for better visualization:
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, fmt='d', xticklabels=class_names, yticklabels=class_names, cmap='Blues')
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title('Confusion Matrix')
+plt.show()
