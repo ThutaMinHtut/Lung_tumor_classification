@@ -9,7 +9,7 @@ The project compares Baseline, Traditional Augmentation (MONAI), and GAN-based a
 - Kaggle CT Scan Images for Lung Cancer Dataset: [Link Here](https://www.kaggle.com/datasets/dishantrathi20/ct-scan-images-for-lung-cancer/data)
 ```
 Dataset folder structure:
-Lung_tumor_detection/
+[PLACEHOLDER]/
 └── LungcancerDataSet/
     ├── test/
     │   ├── adenocarinoma/
